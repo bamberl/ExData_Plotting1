@@ -1,0 +1,46 @@
+Step 1 - Read data
+
+```{r}
+hpc <- read.table("C:/Users/lb858473/Desktop/EDAwk1/household_power_consumption.txt", sep=";", dec=",", header = TRUE, stringsAsFactor=F)
+
+```
+
+Step 2- Subset data
+
+```{r}
+library(dplyr)
+hpc<-filter(hpc, Date %in% c("1/2/2007", "2/2/2007"))
+```
+
+Step 3- Convert from characters to numbers
+
+```{r}
+hpc$Global_active_power<- as.numeric(hpc$Global_active_power)
+hpc$Global_reactive_power<- as.numeric(hpc$Global_reactive_power)
+hpc$Voltage<- as.numeric(hpc$Voltage)
+hpc$Global_intensity<- as.numeric(hpc$Global_intensity)
+hpc$Sub_metering_1<- as.numeric(hpc$Sub_metering_1)
+hpc$Sub_metering_2<- as.numeric(hpc$Sub_metering_2)
+hpc$Sub_metering_3<- as.numeric(hpc$Sub_metering_3)
+
+```
+
+Step 4- Convert to PosXit and add to dataframe
+
+```{r}
+Date<- hpc[, "Date"]
+Time<- hpc[,  "Time"]
+DateTime1<- paste(Date, Time)
+DateTime<- strptime(DateTime1, "%d/%m/%Y %H:%M:%S")
+hpcPlus<- cbind(hpc, DateTime)
+```
+
+Step 5- Generate graph
+
+```{r}
+setwd("C:/Users/lb858473/ExData_Plotting1")
+png(file = "Plot1.png")
+hist(hpcPlus$Global_active_power, col = "red", lwd = 3, ylab = "Frequency", xlab = "Global Active Power (Kilowatts)", main = "Global Active Power")
+dev.off()
+```
+
